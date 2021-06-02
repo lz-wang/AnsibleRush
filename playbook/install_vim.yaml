@@ -1,0 +1,4 @@
+- hosts: pd
+  tasks:
+    - name: install vim
+      yum: name=vim state=latest

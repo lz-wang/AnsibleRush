@@ -1,0 +1,7 @@
+- hosts: pd
+  tasks:
+    - name: install wget
+      yum: name=wget state=latest
+
+    - name: install git 
+      yum: name=git state=latest
