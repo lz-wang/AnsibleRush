@@ -1,7 +1,30 @@
 - hosts: pd
+  roles:
+    - role: gantsign.oh-my-zsh
+      users:
+        - username: root
+        - username: lzwang
+      oh_my_zsh_theme: agnoster
+      oh_my_zsh_plugins:
+        - git
+        - extract
+        - zsh-autosuggestions
+        - zsh-syntax-highlighting
+      oh_my_zsh_install: yes
   tasks:
-    - name: install wget
-      yum: name=wget state=latest
+    - name: install oh-my-zsh plugins zsh-autosuggestions for user root
+      git:
+        repo: "https://github.com/zsh-users/zsh-autosuggestions.git"
+        dest: /root/.oh-my-zsh/custom/plugins/zsh-autosuggestions
+    - name: install oh-my-zsh plugins zsh-syntax-highlighting for user root
+      git:
+        repo: "https://github.com/zsh-users/zsh-syntax-highlighting.git"
+        dest: /root/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting
 
-    - name: install git 
-      yum: name=git state=latest
+    - name: sync zsh settings for user lzwang from user root
+      shell: "rm -rf /home/lzwang/.oh-my-zsh/ && \
+              cp -rf /root/.oh-my-zsh /home/lzwang/.oh-my-zsh && \
+              chown lzwang: ~lzwang /home/lzwang/.oh-my-zsh -R"
+
+    - name: report status
+      debug: msg="oh-my-zsh has been installed for user root and lzwang, please relogin to make it works."
