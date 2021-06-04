@@ -2,3 +2,19 @@
   tasks:
     - name: install vim
       yum: name=vim state=latest
+
+    - name: copy vim config for all user
+      copy: 
+        src: /Users/lzwang/MyAnsible/template/vim/.vimrc
+        dest: /root/.vimrc
+    
+    - name: setup vim for user root
+      shell: "mkdir /root/.vim && cd /root/.vim && \
+              mkdir .backup .swp .undo"
+
+    - name: config vim for user lzwang
+      shell: "cp /root/.vimrc /home/lzwang/.vimrc && \
+              chown lzwang: ~lzwang /home/lzwang/.vimrc && \
+              mkdir /home/lzwang/.vim && cd /home/lzwang/.vim && \
+              mkdir .backup .swp .undo && \
+              chown lzwang: ~lzwang /home/lzwang/.vim -R"
