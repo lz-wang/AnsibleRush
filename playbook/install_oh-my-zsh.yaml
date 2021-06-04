@@ -4,7 +4,7 @@
       users:
         - username: root
         - username: lzwang
-      oh_my_zsh_theme: agnoster
+      oh_my_zsh_theme: ys
       oh_my_zsh_plugins:
         - git
         - extract
