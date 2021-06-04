@@ -1,0 +1,18 @@
+- hosts: pd
+  tasks:
+    - name: configure the EPEL repository 
+      yum: name=epel-release state=latest
+
+    - name: install X Window System
+      shell: yum groupinstall "X Window System" -y
+
+    - name: install Xfce GUI
+      shell: yum groupinstall "Xfce" -y
+
+    - name: remove openbox GUI
+      yum: name=openbox state=removed
+
+    - name: start GUI
+      shell: "systemctl set-default graphical.target && \
+              systemctl get-default && \
+              systemctl isolate graphical.target"
