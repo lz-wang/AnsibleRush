@@ -1,0 +1,24 @@
+- hosts: pd
+  vars:
+    config_local: /Users/lzwang/xfce
+    config_remote: /home/lzwang/.config
+  tasks:
+    - name: remove current setting
+      shell: "rm -rf {{ config_remote }}/xfce4 && \
+              rm -rf {{ config_remote }}/Thunar"
+    - name: copy xfce4 config from local
+      copy: 
+        src: "{{ config_local }}/xfce4"
+        dest: "{{ config_remote }}"
+
+    - name: copy Thunar config from local
+      copy: 
+        src: "{{ config_local }}/Thunar"
+        dest: "{{ config_remote }}"
+
+    - name: grant permission
+      shell: "chown lzwang: ~lzwang /home/lzwang/.config -R"
+
+    - name: reboot and make it works
+      shell: "reboot"
+
