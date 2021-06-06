@@ -7,6 +7,3 @@ Comment=Python IDE
 Exec=bash /opt/pycharm-community-2021.1.2/bin/pycharm.sh
 Categories=Development;IDE;Python;
 Icon=/opt/pycharm-community-2021.1.2/bin/pycharm.png
-Terminal=false
-StartupNotify=true
-MimeType=text/x-python;
