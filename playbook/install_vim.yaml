@@ -9,8 +9,9 @@
         dest: /root/.vimrc
     
     - name: setup vim for user root
-      shell: "mkdir /root/.vim && cd /root/.vim && \
-              mkdir .backup .swp .undo"
+      shell: "mkdir -p /root/.vim/.backup && \
+              mkdir -p /root/.vim/.swp && \
+              mkdir -p /root/.vim/.undo"
 
     - name: config vim for user lzwang
       shell: "cp /root/.vimrc /home/lzwang/.vimrc && \

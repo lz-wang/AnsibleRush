@@ -1,0 +1,17 @@
+- hosts: pd
+  tasks:
+    - name: install vscode (1/3 import source)
+      shell: "rpm --import https://packages.microsoft.com/keys/microsoft.asc"
+
+    - name: install vscode (2/3 get source)
+      shell: "sh -c 'echo -e \"[code]\nname=Visual Studio Code\n\
+              baseurl=https://packages.microsoft.com/yumrepos/vscode\n\
+              enabled=1\ngpgcheck=1\ngpgkey=https://packages.microsoft.com/keys/microsoft.asc\"\
+               > /etc/yum.repos.d/vscode.repo'"
+
+    - name: install vscode (3/3 install)
+      shell: "dnf install code -y"
+
+
+
+

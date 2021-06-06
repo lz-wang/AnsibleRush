@@ -1,0 +1,28 @@
+- hosts: pd
+  vars:
+    - pycharm_url: http://192.168.2.241/jetbrains/pycharm-community-2021.1.2.tar.gz
+    - pycharm_name: pycharm-community-2021.1.2.tar.gz
+    - saved_dir: /usr/local/mysoftware/
+    - dest_dir: /opt/
+  tasks:
+    - name: show pycharm url
+      debug:
+        msg: "pycharm_url: {{ pycharm_url }}"
+    - name: check environment
+      yum:
+        name: 
+          - wget
+          - tar
+        state: latest
+
+    - name: 1/3 get pycharm
+      shell: "wget -P {{ saved_dir }} {{ pycharm_url }}"
+
+    - name: 2/3 uncompress pycharm
+      shell: "tar -zxvf {{ saved_dir }}{{ pycharm_name }} -C {{ dest_dir }} && \
+              chmod 777 -R {{ dest_dir }}"
+
+    - name: 3/3 show pycharm desktop
+      copy:
+        src: /Users/lzwang/MyAnsible/template/xfce/desktop_icons/Pycharm.desktop
+        dest: /usr/share/applications/Pycharm.desktop
