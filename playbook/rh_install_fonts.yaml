@@ -1,0 +1,51 @@
+- hosts: pd
+  vars:
+    - tmp_dir: /root/tmp
+  tasks:
+    # - name: install Powerline fonts (1) clone to local
+    #   git:
+    #     repo: "https://github.com/powerline/fonts.git"
+    #     dest: "{{ tmp_dir }}/fonts"
+    #     depth: 1
+    - name: install Powerline fonts
+      shell: "git clone https://github.com/powerline/fonts.git --depth=1 {{ tmp_dir }}/fonts && \
+              bash {{ tmp_dir }}/fonts/install.sh && \
+              cp -rf /root/.local/share/fonts /home/lzwang/.local/share/fonts"
+
+    - name: install Victor Mono
+      shell: "rm -rf {{ tmp_dir }} && \
+              mkdir {{ tmp_dir }} && \
+              wget -P {{ tmp_dir }} https://rubjo.github.io/victor-mono/VictorMonoAll.zip && \
+              cd {{ tmp_dir }} && \
+              unzip VictorMonoAll.zip -d ./vm && \
+              cp ./vm/TTF/* /home/lzwang/.local/share/fonts"
+
+    - name: install Fira Code
+      shell: "rm -rf {{ tmp_dir }} && \
+              mkdir {{ tmp_dir }} && \
+              wget -P {{ tmp_dir }} https://github.com/tonsky/FiraCode/releases/download/5.2/Fira_Code_v5.2.zip && \
+              cd {{ tmp_dir }} && \
+              unzip Fira_Code_v5.2.zip -d ./fc && \
+              cp ./fc/ttf/* /home/lzwang/.local/share/fonts"
+
+    - name: install iosevka
+      shell: "rm -rf {{ tmp_dir }} && \
+              mkdir {{ tmp_dir }} && \
+              wget -P {{ tmp_dir }} https://github.com/be5invis/Iosevka/releases/download/v7.0.3/{{ item }} && \
+              cd {{ tmp_dir }} && \
+              unzip {{ item }} -d ./iosevka && \
+              cp ./iosevka/* /home/lzwang/.local/share/fonts"
+      loop:
+        - "ttf-iosevka-7.0.3.zip"
+        - "ttf-iosevka-term-7.0.3.zip"
+        - "ttf-iosevka-slab-7.0.3.zip"
+        - "ttf-iosevka-term-slab-7.0.3.zip"
+
+    - name: grant permission for user lzwang
+      shell: "chown lzwang: ~lzwang /home/lzwang/.local/share/fonts -R && \
+              chmod 744 -R /home/lzwang/.local/share/fonts"
+
+    - name: refresh fonts
+      shell: "mkfontscale && \
+              mkfontdir && \
+              fc-cache -fv"
