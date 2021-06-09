@@ -2,11 +2,6 @@
   vars:
     - tmp_dir: /root/tmp
   tasks:
-    # - name: install Powerline fonts (1) clone to local
-    #   git:
-    #     repo: "https://github.com/powerline/fonts.git"
-    #     dest: "{{ tmp_dir }}/fonts"
-    #     depth: 1
     - name: install Powerline fonts
       shell: "git clone https://github.com/powerline/fonts.git --depth=1 {{ tmp_dir }}/fonts && \
               bash {{ tmp_dir }}/fonts/install.sh && \
