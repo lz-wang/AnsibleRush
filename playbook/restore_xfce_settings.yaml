@@ -19,8 +19,9 @@
       loop:  "{{ cfgs }}"
 
     - name: grant permission
-      shell: "chown lzwang: ~lzwang /home/lzwang/.config -R"
-
+      shell: "chown lzwang: ~lzwang {{ config_remote }}/{{ item }}"
+      loop:  "{{ cfgs }}"
+    
     - name: reboot and make settings works
       reboot:
         reboot_timeout: 300
