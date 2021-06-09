@@ -1,0 +1,11 @@
+[Unit]
+Description=gogs git service
+After=network.target
+
+[Service]
+ExecStart=/bin/bash -c " sudo su - mygit -c ' /home/mygit/gogs/gogs web ' "
+Type=simple
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
