@@ -1,11 +1,7 @@
 - hosts: pd
+  vars:
+    lzwang_passwd: "002208"
   tasks:
-   - name: Add group "sysadmins" to remote server
-     group:
-       name: sysadmins
-       gid: 2010
-       state: present
-
    - name: Add user "lzwang" to remote server
      user:
        name: lzwang
@@ -15,7 +11,8 @@
        generate_ssh_key: yes
        ssh_key_bits: 2048
        ssh_key_file: .ssh/id_rsa
-       password: ''
+       update_password: always
+       password: "{{ lzwang_passwd|password_hash('sha512') }}"
 
    - name: give sudo access to "lzwang"
      blockinfile:
