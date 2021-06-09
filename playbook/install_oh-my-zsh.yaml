@@ -8,6 +8,8 @@
       oh_my_zsh_plugins:
         - git
         - extract
+        - sudo
+        - z
         - zsh-autosuggestions
         - zsh-syntax-highlighting
       oh_my_zsh_install: yes
