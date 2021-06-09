@@ -1,0 +1,23 @@
+- hosts: pd
+  vars:
+    config_local: /Users/lzwang/xfce_bak/{{ ansible_date_time.date }}/
+    config_remote: /home/lzwang/.config
+    cfgs:
+        - "xfce4"
+        - "Thunar"
+        - "Mousepad"
+  tasks:
+    - name: Achieve xfce4 config
+      community.general.archive:
+        path: "{{ config_remote }}/{{ item }}/"
+        dest: "/tmp/{{ item }}.tar.gz"
+        format: gz
+        force_archive: true
+      loop: "{{ cfgs }}"
+    
+    - name: Copy xfce4 config to local
+      fetch:
+        src: "/tmp/{{ item }}.tar.gz"
+        dest: "{{ config_local }}"
+        flat: yes
+      loop: "{{ cfgs }}"
