@@ -1,0 +1,82 @@
+- hosts: PVE3965U
+  vars:
+    - base_url: "https://www.kernel.org/pub/software/scm/git"
+    - git_version: "2.32.0"
+    - sys_path: export PATH=$PATH:/usr/local/git/bin
+    - arg: "{{ sys_path }}"
+  tasks:
+    - name: install dependencies
+      yum:
+        name:
+          - curl-devel
+          - expat-devel
+          - gettext-devel
+          - openssl-devel
+          - zlib-devel
+          - asciidoc
+          - perl-ExtUtils-MakeMaker
+          - autoconf
+          - automake
+          - libtool
+          - xmlto
+          - wget
+    - name: remove git (old version)
+      yum: 
+        name:
+          - git
+        state: removed
+
+    - name: get git.tar.gz
+      get_url: 
+        url: "{{ base_url }}/git-{{ git_version }}.tar.gz"
+        dest: /tmp
+    
+    - name: unachieve tarball
+      unarchive:
+        src: /tmp/git-{{ git_version }}.tar.gz
+        dest: /tmp
+        remote_src: yes
+
+    - name: make config
+      shell: "cd /tmp/git-{{ git_version }} && \
+              make configure && \
+              ./configure --prefix=/usr/local/git --with-iconv=/usr/local/libiconv"
+      register: shell_result
+    
+    - debug:
+        var: shell_result.stdout_lines
+
+    - name: make all doc
+      shell: "cd /tmp/git-{{ git_version }} && \
+              make all doc"
+      register: shell_result
+    
+    - debug:
+        var: shell_result.stdout_lines
+
+    - name: make install install-doc install-html 
+      shell: "cd /tmp/git-{{ git_version }} && \
+              make install install-doc install-html"
+      register: shell_result
+    
+    - debug:
+        var: shell_result.stdout_lines
+
+    - name: export to system path
+      shell: "cd /tmp/git-{{ git_version }} && \
+              echo {{ arg }} >> /etc/bashrc && \
+              source /etc/bashrc"
+      register: shell_result
+    
+    - debug:
+        var: shell_result.stdout_lines
+
+    - name: show git version
+      shell: "git --version"
+      register: shell_result
+    
+    - debug:
+        var: shell_result.stdout_lines
+
+    - name: clean tmp files
+      shell: "rm -rf /tmp/git-{{ git_version }}*"
