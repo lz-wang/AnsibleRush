@@ -47,7 +47,7 @@ vim ~/.ansible.cfg
 ### 执行简单的Playbook
 
 ```yaml
-# install_vim.yaml
+# linux_install_vim.yaml
 - hosts: pd
   tasks:
     - name: install vim
@@ -55,6 +55,6 @@ vim ~/.ansible.cfg
 ```
 
 ```shell
-ansible-playbook install_vim.yaml
+ansible-playbook linux_install_vim.yaml
 ```
 

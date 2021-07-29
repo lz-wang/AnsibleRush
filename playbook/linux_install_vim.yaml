@@ -1,7 +1,7 @@
 - hosts: pd
   tasks:
     - name: install vim
-      yum: name=vim state=latest
+      apt: name=vim state=latest
 
     - name: copy vim config for all user
       copy: 
