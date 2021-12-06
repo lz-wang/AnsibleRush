@@ -1,9 +1,9 @@
-- hosts: pd
+- hosts: [PD-RHEL85]
   roles:
     - role: gantsign.oh-my-zsh
       users:
         - username: root
-        - username: lzwang
+        # - username: lzwang
       oh_my_zsh_theme: ys
       oh_my_zsh_plugins:
         - git
@@ -13,19 +13,19 @@
         - zsh-syntax-highlighting
       oh_my_zsh_install: yes
   tasks:
-    - name: install oh-my-zsh plugins zsh-autosuggestions for user root
+    - name: install oh-my-zsh plugin -> zsh-autosuggestions
       git:
         repo: "https://github.com/zsh-users/zsh-autosuggestions.git"
         dest: /root/.oh-my-zsh/custom/plugins/zsh-autosuggestions
-    - name: install oh-my-zsh plugins zsh-syntax-highlighting for user root
+    - name: install oh-my-zsh plugin -> zsh-syntax-highlighting
       git:
         repo: "https://github.com/zsh-users/zsh-syntax-highlighting.git"
         dest: /root/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting
 
-    - name: sync zsh settings for user lzwang from user root
-      shell: "rm -rf /home/lzwang/.oh-my-zsh/ && \
-              cp -rf /root/.oh-my-zsh /home/lzwang/.oh-my-zsh && \
-              chown lzwang: ~lzwang /home/lzwang/.oh-my-zsh -R"
+    # - name: sync zsh settings for user lzwang from user root
+    #   shell: "rm -rf /home/lzwang/.oh-my-zsh/ && \
+    #           cp -rf /root/.oh-my-zsh /home/lzwang/.oh-my-zsh && \
+    #           chown lzwang: ~lzwang /home/lzwang/.oh-my-zsh -R"
 
     - name: report status
-      debug: msg="oh-my-zsh has been installed for user root and lzwang, please relogin to make it works."
+      debug: msg="oh-my-zsh has been installed for user root, please relogin to make it works."
