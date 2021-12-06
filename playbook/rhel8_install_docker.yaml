@@ -1,0 +1,73 @@
+- hosts: RHEL85
+  vars:
+    docker_compose_dir: "/opt/docker-compose"
+    docker_compose_url: "https://github.com/docker/compose/releases/download/v2.2.2/docker-compose-linux-x86_64"
+#    docker_compose_url: "https://hub.fastgit.org/docker/compose/releases/download/v2.2.2/docker-compose-linux-x86_64"
+  tasks:
+    - name: remove docker
+      yum:
+        name:
+          - docker
+          - docker-client
+          - docker-client-latest
+          - docker-common
+          - docker-latest
+          - docker-latest-logrotate
+          - docker-logrotate
+          - docker-engine
+          - podman
+          - runc
+        state: removed
+
+    - name: install yum-utils, runc
+      yum:
+        name:
+          - yum-utils
+          - device-mapper-persistent-data
+          - lvm2
+        state: latest
+
+    - name: Add docker.com source repo
+      shell: "yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo"
+
+    - name: install Docker Engine
+      yum:
+        name:
+          - docker-ce
+          - docker-ce-cli
+          - containerd.io
+        state: latest
+
+    - name: enable and start docker
+      systemd:
+        name: docker
+        daemon_reload: yes
+        state: started
+        enabled: yes
+
+    - name: create docker-compose directory -> {{ docker_compose_dir }}
+      file:
+        path: "{{ docker_compose_dir }}"
+        state: directory
+
+    - name: get docker-compose-x86_64 from {{ docker_compose_url }}
+      get_url:
+        url: "{{ docker_compose_url }}"
+        dest: "{{ docker_compose_dir }}/docker-compose-linux-x86_64"
+
+    - name: chmod +x for docker-compose
+      file:
+        dest: "{{ docker_compose_dir }}/docker-compose-linux-x86_64"
+        mode: a+x
+
+    - name: remove docker-compose in /usr/bin
+      file:
+        path: "/usr/bin/docker-compose"
+        state: absent
+
+    - name: setup docker-compose symlink in /usr/bin
+      file:
+        path: "/usr/bin/docker-compose"
+        src: "{{ docker_compose_dir }}/docker-compose-linux-x86_64"
+        state: link
+        force: yes
