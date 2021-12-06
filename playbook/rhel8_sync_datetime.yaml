@@ -1,3 +1,5 @@
+# https://www.tecmint.com/install-ntp-in-rhel-8/
+# https://www.cnblogs.com/pipci/p/12871993.html
 - hosts: PD_RHEL85
   any_errors_fatal: "{{ any_errors_fatal | default(true) }}"
   tasks:
