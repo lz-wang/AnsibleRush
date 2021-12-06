@@ -1,0 +1,61 @@
+- hosts: PD_RHEL85
+  any_errors_fatal: "{{ any_errors_fatal | default(true) }}"
+  tasks:
+    - name: yum install chrony
+      yum:
+        name: chrony
+        state: present
+      tags:
+        - install_chrony
+
+    - name: set timezone to Asia-Shanghai
+      shell: /usr/bin/timedatectl set-timezone Asia/Shanghai
+      tags:
+        - set_timezone
+
+    - name: remove lines in chrony.conf
+      lineinfile:
+        path: /etc/chrony.conf
+        regexp: '^server'
+        state: absent
+      tags:
+        - remove_chrony_conf
+
+    - name: add ntp servers to chrony.conf
+      lineinfile:
+        path: /etc/chrony.conf
+        regexp: '^server'
+        state: present
+        line: |+
+          server ntp.ntsc.ac.cn prefer
+          server ntp1.aliyun.com
+          server ntp2.aliyun.com
+      tags:
+        - add_new_chrony_conf
+
+    - name: stop chronyd service
+      systemd:
+        name: chronyd
+        daemon_reload: yes
+        state: restarted
+      tags:
+        - restart_chrony
+
+    - name: manual sync time with chronyc
+      shell: chronyc sources
+      tags:
+        - manual_sync_datetime
+
+    - name: enable and start chronyd
+      systemd:
+        name: chronyd
+        daemon_reload: yes
+        state: started
+        enabled: yes
+      tags:
+        - enable_start_ntpd
+
+#    - name: Control whether NTP is enabled
+#      shell: /usr/bin/timedatectl set-ntp yes
+#      tags:
+#        - enable_ntp_control
