@@ -1,0 +1,6 @@
+- hosts: PD_RHEL85
+  vars:
+    - timezone: Asia/Shanghai
+  tasks:
+    - name: change timezone
+      shell: "cp /usr/share/zoneinfo/{{ timezone }} /etc/localtime"
