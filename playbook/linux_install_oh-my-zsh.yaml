@@ -1,4 +1,4 @@
-- hosts: [PD-RHEL85]
+- hosts: [RHEL85_PD]
   roles:
     - role: gantsign.oh-my-zsh
       users:
@@ -6,6 +6,7 @@
         # - username: lzwang
       oh_my_zsh_theme: ys
       oh_my_zsh_plugins:
+        - docker-compose
         - git
         - extract
         - sudo
