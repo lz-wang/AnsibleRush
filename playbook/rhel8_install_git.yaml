@@ -1,0 +1,67 @@
+- hosts: RHEL85_PD
+  vars:
+    - base_url: "https://www.kernel.org/pub/software/scm/git"
+    - git_version: "2.34.0"
+  tasks:
+    - name: install dependencies
+      yum:
+        name:
+          - asciidoc
+          - automake
+          - autoconf
+          - curl-devel
+          - expat-devel
+          - gettext-devel
+          - gcc
+          - libtool
+          - make
+          - openssl-devel
+          - perl-ExtUtils-MakeMaker
+          - xmlto
+          - zlib-devel
+        state: latest
+
+    - name: remove git (old version)
+      yum:
+        name:
+          - git
+          - git-core
+        state: absent
+
+    - name: rm -rf /opt/git-{{ git_version }}
+      file:
+        path: /opt/git-{{ git_version }}
+        state: absent
+
+    - name: mkdir /opt/git-{{ git_version }}
+      file:
+        path: /opt/git-{{ git_version }}
+        state: directory
+        mode: '0755'
+
+    - name: get git-{{ git_version }}.tar.gz
+      get_url: 
+        url: "{{ base_url }}/git-{{ git_version }}.tar.gz"
+        dest: /tmp
+    
+    - name: unachieve git-{{ git_version }}.tar.gz
+      unarchive:
+        src: /tmp/git-{{ git_version }}.tar.gz
+        dest: /opt/
+        remote_src: yes
+
+    - name: make install git {{ git_version }}
+      shell:
+        chdir: /opt/git-{{ git_version }}
+        cmd: make prefix=/usr/local all install
+
+    - name: make install git documentation
+      shell:
+        chdir: /opt/git-{{ git_version }}
+        cmd: make prefix=/usr/local install-doc
+
+    - name: show git version
+      shell: "git --version"
+      register: git_version
+    - debug:
+        var: git_version.stdout_lines
