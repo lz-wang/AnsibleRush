@@ -1,4 +1,4 @@
-- hosts: [RHEL85_PD]
+- hosts: [RHEL85_10400]
   roles:
     - role: gantsign.oh-my-zsh
       users:
