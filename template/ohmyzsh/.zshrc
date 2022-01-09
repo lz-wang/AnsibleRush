@@ -3,7 +3,7 @@
 # ZSH_DISABLE_COMPFIX=true
 
 # Path to your oh-my-zsh installation.
-export ZSH="/Users/lzwang/.oh-my-zsh"
+export ZSH="$HOME/.oh-my-zsh"
 
 # for root user in macOS, replace by this
 # export ZSH="/var/root/.oh-my-zsh"
