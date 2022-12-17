@@ -6,4 +6,4 @@
 
     - name: Set Hostname to "{{ hostname }}"
       hostname:
-        name: "{{ hostname }}{{ ansible_default_ipv4.address }}"
+        name: "{{ hostname }}"
