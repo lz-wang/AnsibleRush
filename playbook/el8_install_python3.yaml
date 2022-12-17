@@ -34,7 +34,7 @@
       debug: var=result
 
     - name: Unarchive "Python{{ python_version }}.tgz"
-      ansible.builtin.unarchive:
+      unarchive:
         src: "/tmp/Python-{{ python_version }}.tgz"
         dest: "/tmp"
         remote_src: yes  # 要解压的文件在远程

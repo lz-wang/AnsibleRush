@@ -1,5 +1,4 @@
 - hosts: el8_test
-  become: yes
 
 - import_playbook: playbook/el8_setup_hostname.yaml
   vars:
@@ -31,7 +30,7 @@
     admin: true
     oh_my_zsh: true  # will sync oh-my-zsh config from root user
 
-#- import_playbook: playbook/el8_time_sync.yaml
-#  vars:
-#    host: el8_test
-#    cron: true  # 定时同步
+- import_playbook: playbook/el8_time_sync.yaml
+  vars:
+    host: el8_test
+    timezone: Asia/Shanghai

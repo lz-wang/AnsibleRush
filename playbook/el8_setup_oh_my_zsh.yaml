@@ -59,7 +59,7 @@
       debug: var=result
 
     - name: Restore .zshrc config
-      ansible.builtin.copy:
+      copy:
         src: "../template/ohmyzsh/.zshrc"
         dest: "$HOME/.zshrc"
         mode: '0644'

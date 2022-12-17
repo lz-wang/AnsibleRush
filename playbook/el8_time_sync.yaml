@@ -1,0 +1,34 @@
+- hosts: "{{ host }}"
+
+  tasks:
+    - name: Set timezone to "{{ timezone }}"
+      community.general.timezone:
+        name: "{{ timezone }}"
+
+    - name: Install Chrony for time sync
+      dnf:
+        name: chrony
+        state: latest
+      register: result
+
+    - name: debug
+      debug: var=result
+
+    - name: Copy custom Chrony.conf to remote server
+      copy:
+        src: "../template/chrony/chrony.conf"
+        dest: "/etc/chrony.conf"
+        mode: '0644'
+        backup: yes
+      register: result
+
+    - name: debug
+      debug: var=result
+
+    - name: Restart Chrony time sync service
+      service:
+        name: chronyd
+        state: restarted
+
+
+
