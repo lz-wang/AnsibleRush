@@ -1,0 +1,32 @@
+- hosts: el8_test
+  become: yes
+
+- import_playbook: playbook/el8_setup_repos.yaml
+  vars:
+    host: el8_test
+
+- import_playbook: playbook/el8_install_pkgs.yaml
+  vars:
+    host: el8_test
+
+- import_playbook: playbook/install_python3.yaml
+  vars:
+    host: el8_test
+    python_version: 3.10.8
+
+- import_playbook: playbook/el8_setup_oh_my_zsh.yaml
+  vars:
+    host: el8_test
+
+- import_playbook: playbook/el8_setup_hostname.yaml
+  vars:
+    host: el8_test
+    hostname: RockyLinux8-test
+
+- import_playbook: playbook/add_user.yaml
+  vars:
+    host: el8_test
+    user_name: lzwang
+    user_pw: "zz123456!!"
+    admin: true
+    oh_my_zsh: true  # will sync oh-my-zsh config from root user

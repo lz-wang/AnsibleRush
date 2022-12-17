@@ -1,0 +1,23 @@
+- hosts: "{{ host }}"
+
+  tasks:
+    - name: Install EL8 Packages
+      dnf:
+        name: "{{ packages }}"
+        state: latest
+      vars:
+        packages:
+          - curl
+          - wget
+          - vim
+          - git
+          - chrony  # time sync
+          - nload  # monitor network IO
+          - iotop  # monitor disk IO
+          - htop   # better top
+          - btop   # all in one monitor
+          - neofetch  # show system info
+      register: result
+
+    - name: debug
+      debug: var=result

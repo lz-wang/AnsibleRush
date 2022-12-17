@@ -1,0 +1,43 @@
+- hosts: "{{ host }}"
+  tasks:
+    - name: Add user "{{ user_name }}" to remote server
+      user:
+        name: "{{ user_name }}"
+        shell: /bin/bash
+        generate_ssh_key: yes
+        ssh_key_type: rsa
+        ssh_key_bits: 2048
+        ssh_key_file: .ssh/id_rsa
+        ssh_key_comment: "{{ user_name }} on {{ host }}"
+        update_password: always
+        password: "{{ user_pw|password_hash('sha512') }}"
+
+    - name: Give sudo access to "{{ user_name }}"
+      blockinfile:
+         path: /etc/sudoers
+         insertafter: "root    ALL=(ALL)       ALL"
+         block: |
+           "{{ user_name }}"    ALL=(ALL)       ALL
+      when:
+        - admin
+
+    - name: Sync oh-my-zsh files to "{{ user_name }}"
+      copy:
+        src: "$HOME/.oh-my-zsh"
+        dest: "/home/{{ user_name }}/"
+        remote_src: yes
+      when: oh_my_zsh
+
+    - name: Sync oh-my-zsh config to "{{ user_name }}"
+      copy:
+        src: "$HOME/.zshrc"
+        dest: "/home/{{ user_name }}/.zshrc"
+        remote_src: yes
+      when: oh_my_zsh
+
+    - name: Change "{{ user_name }}" default shell to zsh
+      user:
+        name: "{{ user_name }}"
+        shell: /bin/zsh
+      when: oh_my_zsh
+

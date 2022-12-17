@@ -1,0 +1,35 @@
+- hosts: "{{ host }}"
+
+  tasks:
+    - name: Show Linux Distribution
+      debug: msg="{{ ansible_distribution }}{{ ansible_distribution_version}}"
+
+    - name: Use USTC RockyLinux8 mirror
+      shell: |
+        sed -e 's|^mirrorlist=|#mirrorlist=|g' \
+            -e 's|^#baseurl=http://dl.rockylinux.org/$contentdir|baseurl=https://mirrors.ustc.edu.cn/rocky|g' \
+            -i.bak \
+            /etc/yum.repos.d/Rocky-AppStream.repo \
+            /etc/yum.repos.d/Rocky-BaseOS.repo \
+            /etc/yum.repos.d/Rocky-Extras.repo \
+            /etc/yum.repos.d/Rocky-PowerTools.repo
+      register: result
+
+    - name: debug
+      debug: var=result
+
+    - name: Enable powertools
+      shell: "dnf config-manager --set-enabled powertools"
+      register: result
+
+    - name: debug
+      debug: var=result
+
+    - name: Add EPEL repo
+      dnf:
+        name: epel-release
+        state: latest
+      register: result
+
+    - name: debug
+      debug: var=result

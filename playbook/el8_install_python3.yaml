@@ -1,0 +1,97 @@
+- hosts: "{{ host }}"
+  tasks:
+    - name: Install dependency packages
+      dnf:
+        name: "{{ packages }}"
+        state: latest
+      vars:
+        packages:
+          - gcc
+          - make
+          - zlib-devel
+          - bzip2-devel
+          - openssl-devel
+          - ncurses-devel
+          - sqlite-devel
+          - readline-devel
+          - tk-devel
+          - gdbm-devel
+          - libpcap-devel
+          - xz-devel
+          - libffi-devel
+      register: result
+
+    - name: debug
+      debug: var=result
+
+    - name: Get "Python-{{ python_version }}.tgz" from "https://cdn.npmmirror.com/binaries/python/{{ python_version }}/Python-{{ python_version }}.tgz"
+      get_url:  # https://cdn.npmmirror.com/binaries/python/3.10.8/Python-3.10.8.tgz
+        url: "https://cdn.npmmirror.com/binaries/python/{{ python_version }}/Python-{{ python_version }}.tgz"
+        dest: "/tmp/Python-{{ python_version }}.tgz"
+      register: result
+
+    - name: debug
+      debug: var=result
+
+    - name: Unarchive "Python{{ python_version }}.tgz"
+      ansible.builtin.unarchive:
+        src: "/tmp/Python-{{ python_version }}.tgz"
+        dest: "/tmp"
+        remote_src: yes  # 要解压的文件在远程
+
+    - name: Remove "/opt/Python-{{ python_version }}"
+      file:
+        path: "/opt/Python-{{ python_version }}"
+        state: absent
+
+    - name: Mkdir "/opt/Python-{{ python_version }}"
+      file:
+        path: "/opt/Python-{{ python_version }}"
+        state: directory
+        mode: '0755'
+
+    - name: configure
+      shell: "./configure --prefix=/opt/Python-{{ python_version }}"
+      args:
+        chdir: "/tmp/Python-{{ python_version }}"
+
+    - name: make
+      community.general.make:
+        chdir: "/tmp/Python-{{ python_version }}"
+
+    - name: make install
+      community.general.make:
+        chdir: "/tmp/Python-{{ python_version }}"
+        target: install
+      become: true
+
+    - name: Add python to PATH
+      shell: echo "export PATH=$PATH:/opt/Python-{{ python_version }}/bin" > /etc/profile.d/path.sh
+
+    - name: Show info
+      shell: "source /etc/profile; python3 -V; pip3 -V"
+      register: result
+
+    - name: debug
+      debug: var=result
+
+    - name: Setup Pypi mirror (use Tencent Cloud Mirror)
+      shell: "pip3 config set global.index-url https://mirrors.cloud.tencent.com/pypi/simple"
+      register: result
+
+    - name: debug
+      debug: var=result
+
+    - name: Install Python packages
+      pip:
+        name: "{{ packages }}"
+        state: latest
+        extra_args: -i https://mirrors.cloud.tencent.com/pypi/simple
+      vars:
+        packages:
+          - pip
+          - pexpect
+      register: result
+
+    - name: debug
+      debug: var=result

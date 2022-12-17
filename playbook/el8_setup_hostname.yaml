@@ -1,0 +1,9 @@
+- hosts: "{{ host }}"
+
+  tasks:
+    - name: Show Remote Server Info
+      debug: msg="{{ ansible_distribution }}{{ ansible_distribution_version}} ({{ ansible_default_ipv4.address }})"
+
+    - name: Set Hostname to "{{ hostname }}"
+      hostname:
+        name: "{{ hostname }}{{ ansible_default_ipv4.address }}"
