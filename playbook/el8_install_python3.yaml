@@ -66,7 +66,7 @@
       become: true
 
     - name: Add python to PATH
-      shell: echo "export PATH=$PATH:/opt/Python-{{ python_version }}/bin" > /etc/profile.d/path.sh
+      shell: echo "export PATH=/opt/Python-{{ python_version }}/bin:$PATH" > /etc/profile.d/path.sh
 
     - name: Show info
       shell: "source /etc/profile; python3 -V; pip3 -V"

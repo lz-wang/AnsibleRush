@@ -1,0 +1,8 @@
+- hosts: "{{ host }}"
+
+  tasks:
+    - name: Show Remote Server Info
+      debug: msg="{{ ansible_distribution }}{{ ansible_distribution_version}} ({{ ansible_default_ipv4.address }})"
+
+    - name: Show vars
+      debug: msg="{{ author }}"
