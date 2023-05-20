@@ -7,8 +7,8 @@
 
 - import_playbook: playbook/el8_setup_hostname.yaml
   vars:
-    host: el8_test
-    hostname: RockyLinux8-test
+    host: el8_hosts
+    hostname: RockyLinux8
 
 - import_playbook: playbook/el8_setup_repos.yaml
   vars:
