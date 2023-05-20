@@ -1,4 +1,9 @@
-- hosts: el8_test
+- hosts: el8_hosts
+
+- import_playbook: playbook/show_info.yaml
+  vars:
+    host: el8_hosts
+    test_var: "{{ test_var }}"
 
 - import_playbook: playbook/el8_setup_hostname.yaml
   vars:
@@ -7,30 +12,30 @@
 
 - import_playbook: playbook/el8_setup_repos.yaml
   vars:
-    host: el8_test
+    host: el8_hosts
 
 - import_playbook: playbook/el8_install_pkgs.yaml
   vars:
-    host: el8_test
+    host: el8_hosts
 
 - import_playbook: playbook/el8_install_python3.yaml
   vars:
-    host: el8_test
-    python_version: 3.10.8
+    host: el8_hosts
+    python_version: 3.11.2
 
 - import_playbook: playbook/el8_setup_oh_my_zsh.yaml
   vars:
-    host: el8_test
+    host: el8_hosts
 
 - import_playbook: playbook/add_user.yaml
   vars:
-    host: el8_test
+    host: el8_hosts
     user_name: lzwang
-    user_pw: "zz123456!!"
+    user_pw: "Zz002208"
     admin: true
     oh_my_zsh: true  # will sync oh-my-zsh config from root user
 
 - import_playbook: playbook/el8_time_sync.yaml
   vars:
-    host: el8_test
+    host: el8_hosts
     timezone: Asia/Shanghai
